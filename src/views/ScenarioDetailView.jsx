@@ -1,9 +1,9 @@
-// src/views/ScenarioDetailView.jsx (修正版：自行載入資料)
+// src/views/ScenarioDetailView.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Typography, Spin, Alert, Collapse, Tag, Button } from 'antd'; // 引入 Button
+import { Typography, Spin, Alert, Collapse, Tag, Button } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
-import './ScenarioDetailView.css'; // 確保這個 CSS 檔案存在
+import './ScenarioDetailView.css';
 
 const { Title, Paragraph, Text } = Typography;
 const { Panel } = Collapse;
@@ -15,13 +15,15 @@ function ScenarioDetailView() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const backendBaseUrl = 'https://proactive-health-backend.onrender.com'; // 後端服務的 URL
+    const backendBaseUrl = 'https://proactive-health-backend.onrender.com';
 
     useEffect(() => {
         const fetchScenarioDetail = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`${backendBaseUrl}/api/scenarios/${scenarioId}`);
+                // *** 修改這裡的路徑：從 /api/scenarios/ 改為 /api/scenario/ ***
+                const apiUrl = `${backendBaseUrl}/api/scenario/${encodeURIComponent(scenarioId)}`;
+                const response = await fetch(apiUrl);
                 if (!response.ok) {
                     throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
                 }
@@ -57,6 +59,9 @@ function ScenarioDetailView() {
                     type="error"
                     showIcon
                 />
+                <Button type="primary" onClick={() => navigate('/scenarios')} style={{ marginTop: '20px' }}>
+                    返回情境列表
+                </Button>
             </div>
         );
     }
@@ -99,7 +104,6 @@ function ScenarioDetailView() {
                                 ))}
                             </div>
                         )}
-                        {/* 這裡可以選擇性地加入AI生成飲食建議的按鈕邏輯，但目前先不加入，專注於核心功能 */}
                     </Panel>
                 ))}
             </Collapse>
