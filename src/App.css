@@ -27,23 +27,23 @@
   text-decoration: none;
 }
 
-/* 桌面版菜單靠右 */
-.app-header .ant-menu-horizontal {
+/* 桌面版菜單的樣式 */
+.header-menu-horizontal {
   flex: 1;
-  justify-content: flex-end;
+  justify-content: flex-end; /* 讓菜單項目靠右對齊 */
   border-bottom: none; /* 移除 antd 預設的底部邊框 */
+  line-height: 64px; /* 確保菜單項目垂直置中 */
+}
+.header-menu-horizontal .ant-menu-item,
+.header-menu-horizontal .ant-menu-submenu {
+    height: 64px; /* 配合 header 高度 */
+    line-height: 64px; /* 配合 header 高度 */
 }
 
-/* 手機版漢堡按鈕 */
-.ant-btn.ant-btn-primary {
-  /* 可以根據設計調整按鈕樣式 */
-  background-color: #1890ff; /* 示例顏色 */
-  border-color: #1890ff;
-}
-
-.ant-btn.ant-btn-primary:hover {
-  background-color: #40a9ff;
-  border-color: #40a9ff;
+/* 手機版漢堡按鈕的樣式 */
+.header-menu-button {
+  /* Ant Design primary button 的預設樣式已經很好，這裡主要是確保顯示 */
+  z-index: 100; /* 確保按鈕在最上層 */
 }
 
 /* 抽屜菜單內的樣式調整 */
@@ -69,319 +69,30 @@
 }
 
 /* 響應式調整 */
-@media (max-width: 767px) {
+/* 當螢幕寬度小於 768px (手機版) 時 */
+@media (max-width: 767px) { 
   .app-header {
     padding: 0 15px; /* 手機版邊距縮小 */
   }
-  .app-content {
-    padding: 15px; /* 手機版內容邊距縮小 */
+  .header-menu-horizontal {
+    display: none; /* 隱藏桌面水平菜單 */
+  }
+  .header-menu-button {
+    display: block; /* 確保漢堡按鈕顯示 */
+  }
+}
+
+/* 當螢幕寬度大於或等於 768px (電腦版) 時 */
+@media (min-width: 768px) {
+  .header-menu-horizontal {
+    display: flex; /* 顯示桌面水平菜單 */
+  }
+  .header-menu-button {
+    display: none; /* 隱藏手機漢堡按鈕 */
   }
 }
 
 /* 以下為各視圖組件的基礎樣式，確保這些 .css 檔案也被正確導入 */
-/* 例如：SearchView.css, ResultsView.css, ScenariosView.css, ScenarioDetailView.css, FoodCheckerView.css */
-
-/* .scenarios-loading, .scenarios-error, .scenario-detail-loading, .scenario-detail-error, .results-loading, .results-error */
-/* 載入和錯誤訊息的通用樣式 */
-.scenarios-loading, .scenarios-error,
-.scenario-detail-loading, .scenario-detail-error,
-.results-loading, .results-error,
-.food-checker-loading, .food-checker-error {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 300px; /* 確保有足夠的空間顯示 */
-  text-align: center;
-}
-
-.scenarios-loading .ant-spin-tip,
-.scenario-detail-loading .ant-spin-tip,
-.results-loading .ant-spin-tip,
-.food-checker-loading .ant-spin-tip {
-    margin-top: 10px;
-}
-
-.ant-alert {
-    width: 100%;
-    max-width: 500px;
-    margin-top: 20px;
-}
-
-/* 各自頁面的容器基礎樣式 */
-.scenarios-view-container,
-.scenario-detail-container,
-.food-checker-container,
-.search-view-container {
-    padding: 20px;
-    background-color: #fff; /* 通常為白色背景 */
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* 確保各卡片、列表等內部元素的基礎樣式 */
-.scenario-card {
-    text-align: center;
-}
-.scenario-icon {
-    font-size: 48px;
-    margin-bottom: 10px;
-}
-
-/* FoodCheckerView 相關樣式 */
-.search-input-wrapper {
-    position: relative;
-    margin-bottom: 16px;
-}
-
-.search-results-dropdown {
-    position: absolute;
-    width: 100%;
-    z-index: 100;
-    max-height: 300px;
-    overflow-y: auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    background-color: #fff;
-    border: 1px solid #e8e8e8;
-}
-
-.search-results-dropdown .ant-list-item {
-    padding: 10px 15px;
-    cursor: pointer;
-}
-
-.search-results-dropdown .ant-list-item:hover {
-    background-color: #e6f7ff; /* Ant Design Blue 1 */
-}
-
-.no-results-message {
-    text-align: center;
-    padding: 20px;
-    color: #999;
-}
-
-.hot-searches-section {
-    margin-bottom: 24px;
-}
-
-.hot-searches-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.hot-search-tag {
-    /* 自定義熱門查詢按鈕樣式 */
-    border-radius: 16px;
-    padding: 4px 12px;
-    font-size: 13px;
-    border: 1px solid #d9d9d9;
-    color: #595959;
-}
-
-.initial-state-card {
-    text-align: center;
-    padding: 60px 20px;
-    background-color: #f8fafc;
-    border-radius: 8px;
-    margin-top: 24px;
-    color: #94a3b8;
-}
-
-.initial-state-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-}
-
-.initial-state-card h3 {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #475569;
-}
-
-.initial-state-card p {
-    font-size: 14px;
-    line-height: 1.5;
-}
-
-.drug-detail-card, .result-content-wrapper {
-    margin-top: 24px;
-    background-color: #fff;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.drug-name-header {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    padding-bottom: 10px;
-}
-
-.section-block {
-    margin-bottom: 20px;
-}
-
-.item-list {
-    list-style-type: disc;
-    padding-left: 20px;
-    margin-top: 8px;
-}
-
-.item-list li {
-    margin-bottom: 4px;
-}
-
-.interaction-item {
-    border-left: 4px solid;
-    padding-left: 12px;
-    margin-bottom: 8px;
-    background-color: #fafafa;
-    border-radius: 4px;
-}
-
-.interaction-item.level-高風險 { border-color: #ff4d4f; }
-.interaction-item.level-中風險 { border-color: #faad14; }
-.interaction-item.level-建議 { border-color: #1890ff; }
-
-.depleted-nutrients-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 8px;
-}
-
-.nutrient-tag {
-    background-color: #e6f7ff; /* Ant Design Blue 1 */
-    color: #1890ff; /* Ant Design Blue 6 */
-    padding: 4px 10px;
-    border-radius: 16px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-
-.disclaimer-text {
-    font-size: 12px;
-    color: #8c8c8c;
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 15px;
-    border-top: 1px dashed #e8e8e8;
-}
-
-/* SearchView.css - 確保已包含 */
-.search-view-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px; /* 調整內邊距 */
-}
-
-.category-tabs {
-    margin-bottom: 16px;
-}
-.category-search-input .ant-input {
-    height: 50px;
-    font-size: 16px;
-}
-.search-suggestion-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.search-suggestion-category {
-    background-color: #f1f5f9;
-    color: #64748b;
-    padding: 2px 8px;
-    border-radius: 12px;
-    font-size: 12px;
-}
-.search-empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    color: #94a3b8;
-    background-color: #f8fafc;
-    border-radius: 8px;
-    margin-top: 24px;
-}
-.search-empty-icon {
-    font-size: 48px;
-    margin-bottom: 16px;
-}
-.search-empty-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #475569;
-}
-.search-empty-description {
-    font-size: 14px;
-    line-height: 1.5;
-}
-.search-no-results {
-    text-align: center;
-    padding: 40px 20px;
-    color: #64748b;
-    background-color: #f8fafc;
-    border-radius: 8px;
-    margin-top: 24px;
-}
-
-
-/* ResultsView.css - 確保已包含 */
-.results-view-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.back-button-results {
-    margin-bottom: 20px;
-    font-size: 16px;
-}
-
-.results-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 5px;
-}
-
-.results-icon {
-    font-size: 28px;
-}
-
-.results-category {
-    color: #888;
-    margin-bottom: 20px;
-}
-
-/* ScenarioDetailView.css - 確保已包含 */
-.scenario-detail-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.back-to-scenarios {
-    margin-bottom: 20px;
-}
-
-.detail-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 10px;
-}
-
-.qa-collapse .ant-collapse-header {
-    font-size: 16px;
-}
-
-.related-links-tags {
-    margin-top: 15px;
-}
+/* 這些是之前已經提供的，請確保它們仍在您的 App.css 中 */
+/* .scenarios-loading, .scenarios-error, .scenario-detail-loading, .scenario-detail-error, .results-loading, .results-error, .food-checker-loading, .food-checker-error */
+/* ... (您現有的其他通用樣式) ... */
