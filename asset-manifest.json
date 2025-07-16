@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/my-health-navigator/static/css/main.fd876500.css",
+    "main.js": "/my-health-navigator/static/js/main.9fcf30ca.js",
+    "static/js/453.2f24955a.chunk.js": "/my-health-navigator/static/js/453.2f24955a.chunk.js",
+    "index.html": "/my-health-navigator/index.html",
+    "main.fd876500.css.map": "/my-health-navigator/static/css/main.fd876500.css.map",
+    "main.9fcf30ca.js.map": "/my-health-navigator/static/js/main.9fcf30ca.js.map",
+    "453.2f24955a.chunk.js.map": "/my-health-navigator/static/js/453.2f24955a.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.fd876500.css",
+    "static/js/main.9fcf30ca.js"
+  ]
+}
