@@ -1,4 +1,4 @@
-// src/views/ResultsView.jsx (修正版：自行載入資料)
+// src/views/ResultsView.js (修正版：自行載入資料)
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Typography, Spin, Alert, List, Tag, Button } from 'antd'; // 引入 Button
