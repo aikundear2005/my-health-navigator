@@ -1,25 +1,26 @@
-// src/views/ScenariosView.jsx (修正版：自行載入資料)
+// src/views/ScenariosView.jsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Card, Col, Row, Typography, Spin, Alert } from 'antd'; // 引入 Spin 和 Alert
+import { Card, Col, Row, Typography, Spin, Alert } from 'antd';
 import { CompassOutlined } from '@ant-design/icons';
-import './ScenariosView.css'; // 確保這個 CSS 檔案存在
+import './ScenariosView.css';
 
 const { Title, Paragraph } = Typography;
 
 function ScenariosView() {
     const navigate = useNavigate();
     const [scenarios, setScenarios] = useState([]);
-    const [loading, setLoading] = useState(true); // 新增載入狀態
-    const [error, setError] = useState(null);   // 新增錯誤狀態
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-    const backendBaseUrl = 'https://proactive-health-backend.onrender.com'; // 後端服務的 URL
+    const backendBaseUrl = 'https://proactive-health-backend.onrender.com';
 
     useEffect(() => {
         const fetchScenarios = async () => {
             try {
-                setLoading(true); // 開始載入
-                const response = await fetch(`${backendBaseUrl}/api/scenarios`);
+                setLoading(true);
+                // *** 修改這裡的路徑：從 /api/scenarios 改為 /api/list/scenarios ***
+                const response = await fetch(`${backendBaseUrl}/api/list/scenarios`);
                 if (!response.ok) {
                     throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
                 }
@@ -27,9 +28,9 @@ function ScenariosView() {
                 setScenarios(data);
             } catch (e) {
                 console.error("載入情境專區失敗:", e);
-                setError("無法載入情境資料，請檢查後端服務或稍後再試。"); // 設定錯誤訊息
+                setError("無法載入情境資料，請檢查後端服務或稍後再試。");
             } finally {
-                setLoading(false); // 結束載入
+                setLoading(false);
             }
         };
 
@@ -65,11 +66,11 @@ function ScenariosView() {
             </Paragraph>
             <Row gutter={[16, 16]} justify="center">
                 {scenarios.map(scenario => (
-                    <Col xs={24} sm={12} md={8} lg={6} key={scenario.id}> {/* 確保每個情境有唯一的 id */}
+                    <Col xs={24} sm={12} md={8} lg={6} key={scenario.id}>
                         <Card
                             hoverable
                             className="scenario-card"
-                            onClick={() => navigate(`/scenarios/${scenario.id}`)} // 使用 id 進行導航
+                            onClick={() => navigate(`/scenarios/${scenario.id}`)}
                         >
                             <div className="scenario-icon">{scenario.icon}</div>
                             <Card.Meta title={scenario.name} description={scenario.description} />
