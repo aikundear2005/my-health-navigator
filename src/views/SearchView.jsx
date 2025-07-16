@@ -1,13 +1,12 @@
-// src/views/SearchView.jsx (修正版：按需載入資料)
+// src/views/SearchView.jsx
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AutoComplete, Tabs, Typography, Spin, Alert, Button, List } from 'antd'; // 引入 Spin, Alert, Button, List
+import { AutoComplete, Tabs, Typography, Spin, Alert, Button, List } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import './SearchView.css';
 
 const { Title, Paragraph } = Typography;
 
-// 初始狀態顯示的組件
 const EmptyState = ({ activeTabLabel }) => (
     <div className="search-empty-state">
         <div className="search-empty-icon"><SearchOutlined /></div>
@@ -19,8 +18,6 @@ const EmptyState = ({ activeTabLabel }) => (
     </div>
 );
 
-// 為每個分類定義熱門查詢項目
-// 注意：這裡的熱門查詢數據可以未來從後端獲取，目前先寫死
 const hotSearches = {
     drug: ['降血脂藥 (他汀類)', '抗生素', '制酸劑 (胃藥)', '阿斯匹靈', '二甲雙胍'],
     symptom: ['疲勞/精力不足', '肌肉疼痛/抽筋', '記憶力下降/腦霧', '睡眠障礙/失眠'],
@@ -38,7 +35,7 @@ function SearchView() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const backendBaseUrl = 'https://proactive-health-backend.onrender.com'; // 後端服務的 URL
+    const backendBaseUrl = 'https://proactive-health-backend.onrender.com';
 
     const tabItems = [
         { key: 'drug', label: '藥物' },
@@ -48,7 +45,6 @@ function SearchView() {
         { key: 'lifestyleImpact', label: '生活習慣' },
     ];
 
-    // 處理搜尋框輸入與自動完成選項生成
     const handleSearch = async (value) => {
         setSearchTerm(value);
         if (!value) {
@@ -60,9 +56,9 @@ function SearchView() {
         setError(null);
 
         try {
-            // 使用新的 API 端點來獲取該分類下的所有名稱，然後在前端過濾
+            // *** 修改這裡的路徑：從 /api/search/ 改為 /api/list/ ***
             const dataKey = tabItems.find(t => t.key === activeTab)?.key + 's'; // 獲取對應的複數名 (如 drugs)
-            const response = await fetch(`${backendBaseUrl}/api/search/${dataKey}`);
+            const response = await fetch(`${backendBaseUrl}/api/list/${dataKey}`);
             if (!response.ok) throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
             const allItems = await response.json();
 
@@ -88,7 +84,6 @@ function SearchView() {
         }
     };
 
-    // 當使用者從建議列表中選擇一項時
     const onSelect = (value) => {
         navigate(`/results/${activeTab}/${encodeURIComponent(value)}`);
     };
@@ -97,7 +92,7 @@ function SearchView() {
         setActiveTab(key);
         setSearchTerm('');
         setOptions([]);
-        setError(null); // 切換 Tab 時清除錯誤
+        setError(null);
     };
 
     const currentTabLabel = tabItems.find(t => t.key === activeTab)?.label;
@@ -118,7 +113,7 @@ function SearchView() {
                 onSearch={handleSearch}
                 value={searchTerm}
                 style={{ width: '100%' }}
-                placeholder={`搜尋${currentTabLabel}名稱或相關關鍵字`} // 動態引導詞
+                placeholder={`搜尋${currentTabLabel}名稱或相關關鍵字`}
                 loading={loading}
             />
             {error && (
@@ -133,7 +128,6 @@ function SearchView() {
                 />
             )}
 
-            {/* 熱門查詢區塊 */}
             {searchTerm.length === 0 && (
                 <div style={{ marginBottom: '24px', marginTop: '24px' }}>
                     <Text strong>熱門查詢：</Text>
@@ -151,7 +145,6 @@ function SearchView() {
                 </div>
             )}
             
-            {/* 根據是否有搜尋詞來決定顯示初始畫面或無結果 */}
             {searchTerm.length === 0 && !loading && (
                 <EmptyState activeTabLabel={currentTabLabel} />
             )}
