@@ -1,0 +1,40 @@
+/* src/views/ScenariosView.css */
+
+.scenarios-view-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 50px; /* 在這裡加入左右 padding */
+}
+
+@media (max-width: 768px) {
+  .scenarios-view-container {
+    padding: 24px 15px; /* 在小螢幕上使用較小的 padding */
+  }
+}
+
+.scenario-card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.scenario-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.12);
+}
+
+.scenario-card .ant-card-body {
+  flex-grow: 1;
+}
+
+.scenario-icon {
+  font-size: 2.5em;
+}
+
+.scenario-card .ant-card-meta-title h4 {
+  margin-top: 10px !important;
+  font-weight: 600;
+  color: #333;
+}

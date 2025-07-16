@@ -1,0 +1,33 @@
+/* src/components/ResultsView.css */
+
+.result-card {
+  width: 100%;
+  max-width: 800px; /* 限制最大寬度 */
+  margin: 20px auto; /* 頂部間距與水平置中 */
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.09);
+}
+
+.result-card ul {
+  padding-left: 20px; /* 列表的內縮排 */
+  list-style-type: disc; /* 使用實心圓點 */
+  margin-bottom: 1em; /* 整個列表下方的間距 */
+}
+
+.result-card li {
+  margin-bottom: 8px; /* --- 統一列表項的下方間距 --- */
+  line-height: 1.6; /* 增加行高以提升可讀性 */
+}
+
+/* 針對自然處方連結的特殊樣式 */
+.natural-prescription-link {
+  color: #1677ff; /* Ant Design 的主藍色 */
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.natural-prescription-link:hover {
+  color: #4096ff; /* 滑鼠懸浮時的顏色 */
+  text-decoration: underline;
+}

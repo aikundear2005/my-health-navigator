@@ -1,0 +1,67 @@
+/* src/views/ScenarioDetailView.css */
+
+.scenario-detail-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px 50px; /* 在這裡加入左右 padding */
+}
+
+@media (max-width: 768px) {
+  .scenario-detail-container {
+    padding: 24px 15px; /* 在小螢幕上使用較小的 padding */
+  }
+}
+
+.back-button {
+  margin-bottom: 24px;
+  padding-left: 0;
+  color: #555;
+}
+
+.scenario-description {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 32px !important;
+  padding-left: 48px;
+  border-left: 3px solid #1677ff;
+}
+
+.qa-collapse {
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.qa-collapse .ant-collapse-item {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.qa-collapse .ant-collapse-item:last-child {
+  border-bottom: none;
+}
+
+.inline-link {
+  font-weight: 600;
+  color: #1677ff;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-underline-offset: 3px;
+}
+
+.related-tags {
+  margin-top: 16px;
+  border-top: 1px dashed #d9d9d9;
+  padding-top: 12px;
+}
+
+.disclaimer-card {
+  margin-top: 24px;
+  background-color: #fafafa;
+  border-color: #e8e8e8;
+  color: #555;
+}
+
+.disclaimer-card .ant-card-body p {
+  margin-bottom: 0;
+}

@@ -1,0 +1,52 @@
+/* src/views/HomeView.css */
+
+.home-view-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px 50px; /* 在這裡加入左右 padding */
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .home-view-container {
+    padding: 24px 15px; /* 在小螢幕上使用較小的 padding */
+  }
+}
+
+.hero-section {
+  margin-bottom: 48px;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  color: #555;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.action-card {
+  border-radius: 12px;
+  height: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: all 0.3s ease;
+}
+
+.action-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+.card-content {
+  padding: 24px;
+}
+
+.card-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: #1677ff;
+}
+
+.action-card .ant-typography {
+  margin-bottom: 16px;
+}

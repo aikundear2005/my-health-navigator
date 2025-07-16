@@ -1,0 +1,66 @@
+/* src/components/food-checker/ResultCard.css */
+
+.result-card-wrapper {
+    background: white;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+}
+.result-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+.result-icon {
+    width: 48px;
+    height: 48px;
+    background: #f1f5f9;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #475569;
+}
+.result-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+}
+.result-subtitle {
+    font-size: 14px;
+    color: #64748b;
+}
+.tab-content-inner {
+    padding-top: 16px;
+}
+.interaction-item {
+    border-left-width: 4px;
+    border-radius: 4px;
+    padding: 15px;
+    margin-bottom: 12px;
+}
+.interaction-item.high-risk { background: #fef2f2; border-color: #ef4444; }
+.interaction-item.medium-risk { background: #fffbeb; border-color: #f59e0b; }
+.interaction-item.low-risk { background: #f0fdf4; border-color: #22c55e; }
+.interaction-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.interaction-icon { font-size: 16px; }
+.interaction-title { font-weight: 600; font-size: 14px; }
+.interaction-description { font-size: 13px; color: #374151; line-height: 1.4; }
+.nutrient-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.nutrient-tag {
+    background: #eff6ff; color: #2563eb;
+    padding: 10px 14px; border-radius: 20px;
+    font-size: 13px; cursor: pointer;
+    transition: all 0.2s ease; border: 1px solid #dbeafe;
+    display: flex; align-items: center; gap: 6px;
+}
+.nutrient-tag:hover { background: #2563eb; color: white; transform: translateY(-1px); }
+.disclaimer { border-radius: 12px !important; margin-top: 20px; }
