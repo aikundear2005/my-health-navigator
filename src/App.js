@@ -1,14 +1,14 @@
-// src/App.js
+// src/App.js (全新漢堡欄設計與導覽列邏輯)
 
-import React, { useState, useEffect } from 'react'; // 確保導入 useState 和 useEffect
+import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Layout, Menu, Button, Drawer, Dropdown } from 'antd';
+import { Layout, Menu, Button, Drawer, Dropdown, Space } from 'antd'; // 引入 Space
 import { MenuOutlined, SearchOutlined, SafetyOutlined, CompassOutlined, HomeOutlined } from '@ant-design/icons';
 
 // 導入所有視圖
 import HomeView from './views/HomeView';
 import SearchView from './views/SearchView';
-import ResultsView from './views/ResultsView';
+import ResultsView from './views/ResultsView'; 
 import ScenariosView from './views/ScenariosView';
 import ScenarioDetailView from './views/ScenarioDetailView';
 import FoodCheckerView from './views/FoodCheckerView';
@@ -16,7 +16,7 @@ import './App.css'; // 確保 App.css 被導入
 
 const { Header, Content, Footer } = Layout;
 
-// 自定義 Hook，用於偵測螢幕寬度（這個 Hook 必須放在 App 組件外部）
+// 自定義 Hook，用於偵測螢幕寬度（放置在組件外部）
 const useWindowSize = () => {
   const [size, setSize] = useState([window.innerWidth, window.innerHeight]);
   useEffect(() => {
@@ -24,41 +24,44 @@ const useWindowSize = () => {
       setSize([window.innerWidth, window.innerHeight]);
     };
     window.addEventListener('resize', handleResize);
-    // 清理函數：組件卸載時移除事件監聽
     return () => window.removeEventListener('resize', handleResize);
-  }, []); // 空依賴項陣列表示只在組件掛載和卸載時執行一次
+  }, []);
   return size;
 };
 
-// 導航項目數據 (Ant Design v5+ 推薦的 `items` 結構)
+// 查詢工具的下拉選單項目陣列
 const queryMenuItems = [
   { key: 'search', icon: <SearchOutlined />, label: <Link to="/search">分類查詢</Link> },
   { key: 'food-checker', icon: <SafetyOutlined />, label: <Link to="/food-checker">飲食相容查詢</Link> },
 ];
 
+// 主導覽列的項目陣列
 const navItems = [
   { key: 'home', icon: <HomeOutlined />, label: <Link to="/">首頁</Link> },
-  { key: 'query-tools', icon: <SearchOutlined />, label: (
+  { 
+    key: 'query-tools', 
+    icon: <SearchOutlined />, 
+    label: (
       <Dropdown menu={{ items: queryMenuItems }} trigger={['hover']}>
-        <span className="nav-dropdown-link">查詢工具</span>
+        <a onClick={e => e.preventDefault()} className="nav-dropdown-link">
+          查詢工具 <MenuOutlined style={{ fontSize: '12px', verticalAlign: 'middle' }} />
+        </a>
       </Dropdown>
-    )
+    ),
   },
   { key: 'scenarios', icon: <CompassOutlined />, label: <Link to="/scenarios">情境專區</Link> },
 ];
 
 function App() {
-  // 不再需要 isLoading, error, database 等全域狀態
-  const [drawerVisible, setDrawerVisible] = useState(false); // 使用 useState
-  const [width] = useWindowSize(); // 獲取當前視窗寬度
-  const isMobile = width < 768; // 判斷是否為手機尺寸 (小於 768px)
+  const [drawerVisible, setDrawerVisible] = useState(false);
+  const [width] = useWindowSize();
+  const isMobile = width < 768; // 定義手機尺寸斷點
 
   const location = useLocation();
   const getCurrentKey = () => {
-    // 根據當前路由判斷選中的菜單項
     if (location.pathname.startsWith('/scenarios')) return 'scenarios';
-    if (location.pathname.startsWith('/food-checker')) return 'query-tools'; // 如果是飲食相容查詢，父級是 query-tools
-    if (location.pathname.startsWith('/search')) return 'query-tools'; // 如果是分類查詢，父級是 query-tools
+    if (location.pathname.startsWith('/food-checker')) return 'query-tools';
+    if (location.pathname.startsWith('/search')) return 'query-tools';
     return 'home';
   };
   
@@ -67,10 +70,10 @@ function App() {
 
   // 手機版抽屜的導航項目
   const mobileNavItems = [
-      { key: 'home', icon: <HomeOutlined />, label: <div onClick={closeDrawer}><Link to="/">首頁</Link></div> },
-      { key: 'search', icon: <SearchOutlined />, label: <div onClick={closeDrawer}><Link to="/search">分類查詢</Link></div> },
-      { key: 'food-checker', icon: <SafetyOutlined />, label: <div onClick={closeDrawer}><Link to="/food-checker">飲食相容查詢</Link></div> },
-      { key: 'scenarios', icon: <CompassOutlined />, label: <div onClick={closeDrawer}><Link to="/scenarios">情境專區</Link></div> },
+      { key: 'home', icon: <HomeOutlined />, label: <Link to="/" onClick={closeDrawer}>首頁</Link> },
+      { key: 'search', icon: <SearchOutlined />, label: <Link to="/search" onClick={closeDrawer}>分類查詢</Link> },
+      { key: 'food-checker', icon: <SafetyOutlined />, label: <Link to="/food-checker" onClick={closeDrawer}>飲食相容查詢</Link> },
+      { key: 'scenarios', icon: <CompassOutlined />, label: <Link to="/scenarios" onClick={closeDrawer}>情境專區</Link> },
   ];
 
   return (
@@ -79,37 +82,42 @@ function App() {
         <div className="logo">
           <Link to="/">My Health Navigator</Link>
         </div>
-        {isMobile ? ( // 如果是手機尺寸 (isMobile 為 true)，顯示漢堡按鈕和抽屜
-          <>
-            <Button type="primary" icon={<MenuOutlined />} onClick={showDrawer} />
-            <Drawer
-              title="導覽"
-              placement="right"
-              onClose={closeDrawer}
-              open={drawerVisible}
-              styles={{ body: { padding: 0 } }} // 確保抽屜內容無內邊距
-            >
-              <Menu
-                theme="light"
-                mode="inline" // 內聯模式適合抽屜菜單
-                selectedKeys={[getCurrentKey()]}
-                items={mobileNavItems} // Ant Design v5+ 推薦的 `items` 結構
-              />
-            </Drawer>
-          </>
-        ) : ( // 否則 (isMobile 為 false)，顯示水平菜單
+        
+        {isMobile ? ( // 手機版
+          <Button 
+            type="primary" 
+            icon={<MenuOutlined />} 
+            onClick={showDrawer} 
+            className="header-menu-button" // 新增一個 class 以便 CSS 控制
+          />
+        ) : ( // 電腦版
           <Menu
             theme="dark"
-            mode="horizontal" // 水平模式適合桌面導覽列
+            mode="horizontal"
             selectedKeys={[getCurrentKey()]}
-            items={navItems} // Ant Design v5+ 推薦的 `items` 結構
-            style={{ flex: 1, justifyContent: 'flex-end' }} // 讓菜單靠右對齊
+            items={navItems}
+            className="header-menu-horizontal" // 新增一個 class 以便 CSS 控制
           />
         )}
+
+        <Drawer
+          title="導覽"
+          placement="right"
+          onClose={closeDrawer}
+          open={drawerVisible}
+          styles={{ body: { padding: 0 } }}
+        >
+          <Menu
+            theme="light"
+            mode="inline"
+            selectedKeys={[getCurrentKey()]}
+            items={mobileNavItems}
+          />
+        </Drawer>
+
       </Header>
       <Content className="app-content">
         <Routes>
-          {/* 移除傳遞 database prop */}
           <Route path="/" element={<HomeView />} />
           <Route path="/search" element={<SearchView />} /> 
           <Route path="/results/:type/:itemKey" element={<ResultsView />} />
