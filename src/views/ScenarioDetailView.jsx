@@ -1,164 +1,110 @@
-// src/views/ScenarioDetailView.jsx
-
-import React from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
-import { Typography, Collapse, Button, Card, Tag } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
-import './ScenarioDetailView.css';
+// src/views/ScenarioDetailView.jsx (修正版：自行載入資料)
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Typography, Spin, Alert, Collapse, Tag, Button } from 'antd'; // 引入 Button
+import { LeftOutlined } from '@ant-design/icons';
+import './ScenarioDetailView.css'; // 確保這個 CSS 檔案存在
 
 const { Title, Paragraph, Text } = Typography;
+const { Panel } = Collapse;
 
-/**
- * 渲染帶有連結的答案
- * @param {string} answer - 包含【關鍵字】的答案文本
- * @param {object} links - 包含連結類型和關鍵字陣列的對象
- * @returns {Array} - React 元素陣列
- */
-const renderAnswerWithLinks = (answer, links) => {
-  if (!answer) return null;
+function ScenarioDetailView() {
+    const { scenarioId } = useParams();
+    const navigate = useNavigate();
+    const [scenario, setScenario] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
-  if (!links) {
-    return (
-      <Paragraph>
-        {answer.split('\n').map((line, i) => (
-          <React.Fragment key={i}>
-            {line}
-            {i < answer.split('\n').length - 1 && <br />}
-          </React.Fragment>
-        ))}
-      </Paragraph>
-    );
-  }
-  
-  const allKeywords = Object.values(links).flat();
-  if (allKeywords.length === 0) {
-    return (
-        <Paragraph>
-            {answer.split('\n').map((line, i) => (
-              <React.Fragment key={i}>
-                {line}
-                {i < answer.split('\n').length - 1 && <br />}
-              </React.Fragment>
-            ))}
-        </Paragraph>
-    );
-  }
+    const backendBaseUrl = 'https://proactive-health-backend.onrender.com'; // 後端服務的 URL
 
-  const regex = new RegExp(`(【(?:${allKeywords.join('|')})】)`, 'g');
-  const parts = answer.split(regex);
-
-  return (
-    <Paragraph>
-      {parts.map((part, index) => {
-        if (regex.test(part)) {
-          const keyword = part.replace(/[【】]/g, '');
-          
-          let linkType = '';
-          for (const type in links) {
-            if (links[type].includes(keyword)) {
-              linkType = type.slice(0, -1);
-              break;
+    useEffect(() => {
+        const fetchScenarioDetail = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch(`${backendBaseUrl}/api/scenarios/${scenarioId}`);
+                if (!response.ok) {
+                    throw new Error(`HTTP 錯誤! 狀態: ${response.status}`);
+                }
+                const data = await response.json();
+                setScenario(data);
+            } catch (e) {
+                console.error(`載入情境 ${scenarioId} 詳細失敗:`, e);
+                setError("無法載入情境詳細資料，請檢查後端服務或稍後再試。");
+            } finally {
+                setLoading(false);
             }
-          }
-          
-          if (linkType) {
-            return (
-              <Link to={`/results/${linkType}/${keyword}`} key={index} className="inline-link">
-                {part}
-              </Link>
-            );
-          }
+        };
+
+        if (scenarioId) {
+            fetchScenarioDetail();
         }
-        return part.split('\n').map((line, i) => (
-          <React.Fragment key={`${index}-${i}`}>
-            {line}
-            {i < part.split('\n').length - 1 && <br />}
-          </React.Fragment>
-        ));
-      })}
-    </Paragraph>
-  );
-};
+    }, [scenarioId]);
 
-// 生成底部相關連結標籤的輔助函數
-const renderRelatedTags = (qaItem) => {
-    const links = qaItem.related_links;
-    if (!links) return null;
-
-    const tags = [];
-    if (links.nutrients) {
-      links.nutrients.forEach(n => 
-        tags.push(<Link to={`/results/nutrient/${n}`} key={`n-${n}`}><Tag color="blue">{n}</Tag></Link>)
-      );
+    if (loading) {
+        return (
+            <div className="scenario-detail-loading">
+                <Spin size="large" tip="情境詳情載入中..." />
+            </div>
+        );
     }
-    if (links.naturalPrescriptions) {
-      links.naturalPrescriptions.forEach(p => 
-        tags.push(<Link to={`/results/naturalPrescription/${p}`} key={`p-${p}`}><Tag color="green">{p}</Tag></Link>)
-      );
+
+    if (error) {
+        return (
+            <div className="scenario-detail-error">
+                <Alert
+                    message="載入情境詳情失敗"
+                    description={error}
+                    type="error"
+                    showIcon
+                />
+            </div>
+        );
     }
-    return tags.length > 0 ? <div className="related-tags">{tags}</div> : null;
-};
 
+    if (!scenario) {
+        return (
+            <div className="scenario-detail-not-found">
+                <Alert
+                    message="情境未找到"
+                    description="抱歉，找不到您查詢的情境資訊。"
+                    type="warning"
+                    showIcon
+                />
+                <Button type="primary" onClick={() => navigate('/scenarios')} style={{ marginTop: '20px' }}>
+                    返回情境列表
+                </Button>
+            </div>
+        );
+    }
 
-function ScenarioDetailView({ database }) {
-  const { scenarioId } = useParams();
-  const navigate = useNavigate();
-  const scenario = database?.scenarios?.[scenarioId];
-
-  if (!scenario) {
     return (
-      <Card style={{ textAlign: 'center', padding: '24px' }}>
-        <Title level={4}>找不到對應的情境</Title>
-        <Paragraph>請返回情境列表頁重新選擇。</Paragraph>
-        <Button onClick={() => navigate('/scenarios')}>返回列表</Button>
-      </Card>
+        <div className="scenario-detail-container">
+            <Button type="text" icon={<LeftOutlined />} onClick={() => navigate('/scenarios')} className="back-to-scenarios">
+                返回情境專區
+            </Button>
+            <Title level={2} className="detail-title">{scenario.icon} {scenario.name}</Title>
+            <Paragraph className="detail-description">{scenario.description}</Paragraph>
+
+            <Collapse accordion defaultActiveKey={['0']} className="qa-collapse">
+                {scenario.qa_list && scenario.qa_list.map((qa, index) => (
+                    <Panel header={<Text strong>{qa.question}</Text>} key={String(index)}>
+                        <Paragraph>{qa.answer}</Paragraph>
+                        {(qa.related_links?.nutrients || qa.related_links?.naturalPrescriptions) && (
+                            <div className="related-links-tags">
+                                {qa.related_links.nutrients && qa.related_links.nutrients.map(n => (
+                                    <Tag key={n} color="blue">{`營養素: ${n}`}</Tag>
+                                ))}
+                                {qa.related_links.naturalPrescriptions && qa.related_links.naturalPrescriptions.map(p => (
+                                    <Tag key={p} color="green">{`自然處方: ${p}`}</Tag>
+                                ))}
+                            </div>
+                        )}
+                        {/* 這裡可以選擇性地加入AI生成飲食建議的按鈕邏輯，但目前先不加入，專注於核心功能 */}
+                    </Panel>
+                ))}
+            </Collapse>
+        </div>
     );
-  }
-
-  // --- Collapse 項目重構 ---
-  // 根據 antd v5 建議，將 qa_list 轉換為 items 陣列
-  const collapseItems = scenario.qa_list.map((qa, index) => ({
-    key: index,
-    label: <Text strong>{qa.question}</Text>,
-    children: (
-      <>
-        {renderAnswerWithLinks(qa.answer, qa.related_links)}
-        {renderRelatedTags(qa)}
-      </>
-    ),
-  }));
-  // -------------------------
-
-  return (
-    <div className="scenario-detail-container">
-      <Button 
-        type="text" 
-        icon={<ArrowLeftOutlined />} 
-        onClick={() => navigate('/scenarios')}
-        className="back-button"
-      >
-        返回情境列表
-      </Button>
-
-      <Title level={2}>{scenario.icon} {scenario.name}</Title>
-      <Paragraph className="scenario-description">{scenario.description}</Paragraph>
-      
-      {/* --- 使用新的 items 屬性來渲染 Collapse --- */}
-      <Collapse 
-        accordion 
-        className="qa-collapse"
-        items={collapseItems}
-      />
-      {/* ------------------------------------ */}
-
-      {/* 小叮嚀區塊 */}
-      {scenario.disclaimer && (
-        <Card size="small" className="disclaimer-card">
-          <Paragraph>📌 {scenario.disclaimer}</Paragraph>
-        </Card>
-      )}
-    </div>
-  );
 }
 
 export default ScenarioDetailView;
