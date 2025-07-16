@@ -1,4 +1,4 @@
-// src/App.js (全新漢堡欄設計與導覽列邏輯)
+// src/App.js (最終修正版 - 移除舊的全域資料載入邏輯)
 
 import React, { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
@@ -29,13 +29,13 @@ const useWindowSize = () => {
   return size;
 };
 
-// 查詢工具的下拉選單項目陣列
+// 查詢工具的下拉選單項目陣列 (Ant Design v5+ 推薦的 `items` 結構)
 const queryMenuItems = [
   { key: 'search', icon: <SearchOutlined />, label: <Link to="/search">分類查詢</Link> },
   { key: 'food-checker', icon: <SafetyOutlined />, label: <Link to="/food-checker">飲食相容查詢</Link> },
 ];
 
-// 主導覽列的項目陣列
+// 主導覽列的項目陣列 (Ant Design v5+ 推薦的 `items` 結構)
 const navItems = [
   { key: 'home', icon: <HomeOutlined />, label: <Link to="/">首頁</Link> },
   { 
@@ -75,6 +75,11 @@ function App() {
       { key: 'food-checker', icon: <SafetyOutlined />, label: <Link to="/food-checker" onClick={closeDrawer}>飲食相容查詢</Link> },
       { key: 'scenarios', icon: <CompassOutlined />, label: <Link to="/scenarios" onClick={closeDrawer}>情境專區</Link> },
   ];
+
+  // ====================================================================
+  // *** 移除 initializeApp 及其內部對 /api/data 的請求 ***
+  // 各個視圖組件現在會自己負責資料載入，App.js 不再進行全域資料初始化。
+  // ====================================================================
 
   return (
     <Layout className="layout-container">
